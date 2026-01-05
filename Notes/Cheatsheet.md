@@ -193,6 +193,14 @@
 - **离散型**（和分布）：$p_Z(z)=\sum_kp_X(k)p_Y(z-k)$
 - **连续型**（卷积）：$f_Z(z)=\int_{-\infin}^{\infin}f_X(x)f_Y(z-x)dx$ *技巧：确定$x$的取值范围，使得$f_X(x)>0$且$f_Y(z-x)>0$*
 
+| 原始分布 $X,Y$          | 参数                                                         | 和的分布 $Z=X+Y$ | $Z$的参数                                        | 规律总结                  |
+| ----------------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------ | ------------------------- |
+| 高斯分布                | $\mathcal{N}(\mu_1,\sigma_1^2)$，$\mathcal{N}(\mu_2,\sigma_2^2)$ | 正态分布         | $\mathcal{N}(\mu_1+\mu_2,\sigma_1^2+\sigma_2^2)$ | 均值相加，方差相加        |
+| 泊松分布                | $\mathrm{Poi}(\lambda_1)$，$\mathrm{Poi}(\lambda_2)$         | 泊松分布         | $\mathrm{Poi}(\lambda_1+\lambda_2)$              | 强度参数直接相加          |
+| 二项分布($p$相同)       | $\mathrm{Bin}(m,p)$，$\mathrm{Bin}(n,p)$                     | 二项分布         | $\mathrm{Bin}(m+n,p)$                            | 试验次数相加，概率$p$不变 |
+| 指数分布($\lambda$相同) | $\mathrm{Exp}(\lambda)$                                      | Erlang分布       | $\mathrm{Gamma}(2,\lambda)$                      |                           |
+| 几何分布($p$相同)       | $\mathrm{Geo}(p)$                                            | 负二项分布       | $\mathrm{NB}(2,p)$                               | 成功次数变为2             |
+
 ### 随机变量函数的联合分布
 
 若$(X,Y)\to(U,V)$是一一对应变换，反函数为$x=g(u,v),y=h(u,v)$，则
@@ -227,6 +235,21 @@
 
 **方差的计算**：$\mathrm{Var}(X)=\mathbb{E}[X^2]-(\mathbb{E}[X])^2\ge0$
 
+### Jenson不等式
+
+它描述了**函数的期望**与**期望的函数**之间的关系，也就是$\mathbb{E}[\phi(X)]$和$\phi(E[X])$之间的大小关系。
+
+- 若$\phi(x)$是**凸函数**，即$\phi''(x)>0$，则$\mathbb{E}[\phi(X)]\ge\phi(\mathbb{E}[X])$，*直觉：函数弯曲向上，平均值处的函数偏小，平均后的函数值偏大*。
+- 若$\phi(x)$是**凹函数**，即$\phi''(x)<0$，则$\mathbb{E}[\phi(X)]\le\phi(\mathbb{E}[X])$，*直觉：函数弯曲向下，平均值处的函数偏大，平均后的函数值偏小*。
+
+| 函数 $\phi(X)$ | 形状 | Jenson不等式结果                                    |
+| -------------- | ---- | --------------------------------------------------- |
+| $x^2$          | 凸   | $\mathbb{E}[X^2]\ge(\mathbb{E}[X])^2$               |
+| $e^x$          | 凸   | $\mathbb{E}[e^X]\ge e^{\mathbb{E}[X]}$              |
+| $\frac{1}{x}$  | 凸   | $\mathbb{E}[\frac{1}{X}]\ge\frac{1}{\mathbb{E}[X]}$ |
+| $\ln(x)$       | 凹   | $\mathbb{E}[\ln{X}]\le\ln(\mathbb{E}[X])$           |
+| $\sqrt{x}$     | 凹   | $\mathbb{E}[\sqrt{X}]\le\sqrt{\mathbb{E}[X]}$       |
+
 ### 协方差
 
 **定义**：$\mathrm{Cov}(X,Y)=\mathbb{E}[(X-\mu_X)(Y-\mu_Y)]=\mathbb{E}[XY]-\mathbb{E}[X]\mathbb{E}[Y]$
@@ -237,7 +260,7 @@
 - 线性性质：$\mathrm{Cov}(aX+b,cY+d)=ac\cdot\mathrm{Cov}(X,Y)$
 - 和的方差：$\mathrm{Var}(X\pm Y)=\mathrm{Var}(X)+\mathrm{Var}(Y)\pm2\mathrm{Cov}(X,Y)$
 
-只有当$\mathrm{Cov}(X,Y)=0$，即两个变量相互独立时，才有$\mathrm{Var}(X\pm Y)=\mathrm{Var}(X)\pm\mathrm{Var}(Y)$
+只有当$\mathrm{Cov}(X,Y)=0$时（*注，这不代表两者独立，但是独立一定代表$\mathrm{Cov}=0$*），才有$\mathrm{Var}(X\pm Y)=\mathrm{Var}(X)+\mathrm{Var}(Y)$
 
 推广到$n$个i.i.d.变量：若$X_1,X_2,\dots,X_n$相互独立，
 
@@ -274,7 +297,7 @@
 
 **切比雪夫不等式**：对于任意$k>0$，$P(|X-\mu|\ge k\sigma)\le\frac{1}{k^2}$或$P(|X-\mu|<k\sigma)\ge1-\frac{1}{k^2}$
 
-**大数定律**(LLN)：当$n\to\infin$时，样本均值依概率收敛与真实期望，即$\bar{X}_n=\frac{1}{n}\sum_{i=1}^{n}X_i\to\mu$
+**大数定律**(LLN)：当$n\to\infin$时，样本均值依概率收敛于真实期望，即$\bar{X}_n=\frac{1}{n}\sum_{i=1}^{n}X_i\to\mu$
 
 **中心极限定理**(CLT)：无论总体分布如何（只要方差存在），当$n$足够大时，样本和（或均值）近似服从正态分布，即$S_n=\sum_{i=1}^{n}X_i\approx\mathcal{N}(n\mu,n\sigma^2)$，并且$\bar{X}_n\approx\mathcal{N}(\mu,\frac{\sigma^2}{n})$。
 
